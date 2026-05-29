@@ -20,6 +20,7 @@ package main
 import (
 	"flag"
 	"os"
+	"strings"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -29,6 +30,7 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
@@ -66,10 +68,12 @@ func main() {
 		metricsAddr          string
 		enableLeaderElection bool
 		probeAddr            string
+		namespaceList        string
 	)
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
+	flag.StringVar(&namespaceList, "namespaces", "", "Comma-separated list of namespaces to watch. If empty, watch all namespaces.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. Enabling this will ensure there is only one active controller manager.")
 
@@ -81,8 +85,16 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
+	cacheOptions, watchedNamespaces := cacheOptionsForNamespaces(namespaceList)
+	if len(watchedNamespaces) > 0 {
+		setupLog.Info("watching namespaces", "namespaces", strings.Join(watchedNamespaces, ","))
+	} else {
+		setupLog.Info("watching all namespaces")
+	}
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme: scheme,
+		Cache:  cacheOptions,
 		Metrics: metricsserver.Options{
 			BindAddress: metricsAddr,
 		},
@@ -161,4 +173,30 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+func cacheOptionsForNamespaces(namespaceList string) (cache.Options, []string) {
+	cacheOptions := cache.Options{}
+	namespaces := make([]string, 0)
+	defaultNamespaces := make(map[string]cache.Config)
+
+	for _, namespace := range strings.Split(namespaceList, ",") {
+		namespace = strings.TrimSpace(namespace)
+		if namespace == "" {
+			continue
+		}
+
+		if _, exists := defaultNamespaces[namespace]; exists {
+			continue
+		}
+
+		defaultNamespaces[namespace] = cache.Config{}
+		namespaces = append(namespaces, namespace)
+	}
+
+	if len(defaultNamespaces) > 0 {
+		cacheOptions.DefaultNamespaces = defaultNamespaces
+	}
+
+	return cacheOptions, namespaces
 }
