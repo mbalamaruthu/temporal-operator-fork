@@ -746,7 +746,7 @@ func (in *PodTemplateSpecOverride) DeepCopyInto(out *PodTemplateSpecOverride) {
 	}
 	if in.Spec != nil {
 		in, out := &in.Spec, &out.Spec
-		*out = new(apiextensionsv1.JSON)
+		*out = new(v1.PodSpec)
 		(*in).DeepCopyInto(*out)
 	}
 }
