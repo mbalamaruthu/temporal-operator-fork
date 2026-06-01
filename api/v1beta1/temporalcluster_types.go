@@ -193,7 +193,7 @@ type PodTemplateSpecOverride struct {
 
 	// Specification of the desired behavior of the pod.
 	// +optional
-	Spec *apiextensionsv1.JSON `json:"spec,omitempty"`
+	Spec *corev1.PodSpec `json:"spec,omitempty"`
 }
 
 // ObjectMetaOverride provides the ability to override an object metadata.
