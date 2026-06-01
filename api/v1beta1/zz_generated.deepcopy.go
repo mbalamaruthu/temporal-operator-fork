@@ -746,7 +746,7 @@ func (in *PodTemplateSpecOverride) DeepCopyInto(out *PodTemplateSpecOverride) {
 	}
 	if in.Spec != nil {
 		in, out := &in.Spec, &out.Spec
-		*out = new(apiextensionsv1.JSON)
+		*out = new(v1.PodSpec)
 		(*in).DeepCopyInto(*out)
 	}
 }
@@ -1844,6 +1844,13 @@ func (in *TemporalNamespaceSpec) DeepCopyInto(out *TemporalNamespaceSpec) {
 		in, out := &in.Archival, &out.Archival
 		*out = new(TemporalNamespaceArchivalSpec)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.CustomSearchAttributes != nil {
+		in, out := &in.CustomSearchAttributes, &out.CustomSearchAttributes
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
 	}
 }
 
