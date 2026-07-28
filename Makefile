@@ -53,21 +53,45 @@ CRD_PRESERVE=x-kubernetes-preserve-unknown-fields = true
 .PHONY: manifests
 manifests: controller-gen yq ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.frontend.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.frontend.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).services.properties.frontend.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.frontend.properties.initContainers.items.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.frontend.properties.initContainers.items.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i '.$(YAML_PREFIX).services.properties.frontend.properties.initContainers.items.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.history.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.history.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).services.properties.history.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.history.properties.initContainers.items.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.history.properties.initContainers.items.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i '.$(YAML_PREFIX).services.properties.history.properties.initContainers.items.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.matching.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.matching.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).services.properties.matching.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.matching.properties.initContainers.items.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.matching.properties.initContainers.items.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i '.$(YAML_PREFIX).services.properties.matching.properties.initContainers.items.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.internalFrontend.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.internalFrontend.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).services.properties.internalFrontend.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.internalFrontend.properties.initContainers.items.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.internalFrontend.properties.initContainers.items.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i '.$(YAML_PREFIX).services.properties.internalFrontend.properties.initContainers.items.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.worker.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.worker.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).services.properties.worker.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.worker.properties.initContainers.items.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.worker.properties.initContainers.items.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i '.$(YAML_PREFIX).services.properties.worker.properties.initContainers.items.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).services.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).services.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).ui.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).ui.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).ui.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).admintools.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i 'del(.$(YAML_PREFIX).admintools.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
+	$(YQ) -i '.$(YAML_PREFIX).admintools.properties.overrides.properties.deployment.properties.spec.properties.template.properties.spec.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).jobInitContainers.items.properties)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i 'del(.$(YAML_PREFIX).jobInitContainers.items.required)' ./config/crd/bases/temporal.io_temporalclusters.yaml
 	$(YQ) -i '.$(YAML_PREFIX).jobInitContainers.items.$(CRD_PRESERVE)' ./config/crd/bases/temporal.io_temporalclusters.yaml
